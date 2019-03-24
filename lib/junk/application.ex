@@ -3,6 +3,8 @@ defmodule Junk.Application do
   # for more information on OTP Applications
   @moduledoc false
 
+  @port 4001
+
   use Application
 
   def start(_type, _args) do
@@ -10,6 +12,7 @@ defmodule Junk.Application do
     children = [
       # Starts a worker by calling: Junk.Worker.start_link(arg)
       # {Junk.Worker, arg}
+      Plug.Cowboy.child_spec(scheme: :http, plug: Junk.Router, options: [port: @port])
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
