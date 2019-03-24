@@ -25,7 +25,8 @@ defmodule Junk.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:sweet_xml, "~> 0.6"},
       {:mime, "~> 1.2"},
-      {:hackney, "~> 1.15"}
+      {:hackney, "~> 1.15"},
+      {:distillery, "~> 2.0"}
     ]
   end
 end

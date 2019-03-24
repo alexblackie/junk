@@ -1,0 +1,29 @@
+FROM ubuntu:bionic
+
+ENV PATH "/usr/local/elixir/bin:/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin"
+ENV MIX_ENV "prod"
+ENV DEBIAN_FRONTEND noninteractive
+
+# Fix locale complaints from Elixir
+ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
+
+ENV ERLANG_VERSION 21.3.2-1
+ENV ELIXIR_VERSION 1.8.0
+
+# installing debs is hilarious
+RUN apt-get update && apt-get install -y build-essential curl unzip jq python-pip git postgresql-client && \
+    curl -sLo /tmp/erlang.deb https://packages.erlang-solutions.com/erlang/esl-erlang/FLAVOUR_1_general/esl-erlang_$ERLANG_VERSION~ubuntu~bionic_amd64.deb && \
+    dpkg -i /tmp/erlang.deb ; apt-get install -fy && rm /tmp/erlang.deb && \
+    apt-get clean
+
+RUN pip install awscli
+
+RUN curl -Lo /tmp/elixir.zip https://github.com/elixir-lang/elixir/releases/download/v$ELIXIR_VERSION/Precompiled.zip && \
+    mkdir /usr/local/elixir && \
+    unzip -d /usr/local/elixir /tmp/elixir.zip && \
+    rm /tmp/elixir.zip
+
+RUN mix local.hex --force
+RUN mix local.rebar --force
