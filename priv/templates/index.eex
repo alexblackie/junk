@@ -1,0 +1,47 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title><%= ctx.page_title %> on junk dot pics</title>
+  <link rel="stylesheet" href="/_/site.css" type="text/css">
+</head>
+<body>
+  <div class="container">
+    <header class="site-header">
+<h1><a href="/"><span><%= ctx.page_title %></span> on <span>junk dot pics</span></a></h1>
+    </header>
+
+    <div class="site-main">
+      <div class="site-content">
+				<ul class="pics">
+					<%= for pic <- ctx.pics do %>
+						<li class="pic">
+							<%= if pic.prefix do %>
+							<a class="pic-prefix" href="/<%= pic.prefix %>"><%= pic.prefix %></a>
+							<% else %>
+							::
+							<% end %>
+							/
+							<a class="pic-name" href="/<%= Junk.Pic.url(pic) %>"><%= pic.name %></a>
+						</li>
+					<% end %>
+				</ul>
+      </div>
+
+      <footer class="site-side">
+        <nav class="site-menu">
+          <h2>Collections</h2>
+          <ul>
+          <%= for prefix <- ctx.prefixes do %>
+            <li><a href="/<%= prefix %>"><%= prefix %></a></li>
+          <% end %>
+          </ul>
+        </nav>
+        <p class="credits">
+          This site is <a href="https://github.com/alexblackie/junk">open source software</a>, curated by <a href="https://www.alexblackie.com">Alex Blackie</a>, and powered by <a href="https://elixir-lang.org">Elixir</a>.
+        </p>
+      </footer>
+    </div>
+
+  </div>
+</body>

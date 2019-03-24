@@ -12,6 +12,7 @@ defmodule Junk.Application do
     children = [
       # Starts a worker by calling: Junk.Worker.start_link(arg)
       # {Junk.Worker, arg}
+      {Junk.Pics, []},
       Plug.Cowboy.child_spec(scheme: :http, plug: Junk.Router, options: [port: @port])
     ]
 
