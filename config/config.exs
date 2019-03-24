@@ -2,6 +2,8 @@
 # and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
+config :junk, s3_url: "https://junk-pics-production.s3.amazonaws.com"
+
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
 # file won't be loaded nor affect the parent project. For this reason,

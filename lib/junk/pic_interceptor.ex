@@ -6,7 +6,7 @@ defmodule Junk.PicInterceptor do
 
   import Plug.Conn
 
-  @base_url "https://junk-pics-production.s3.amazonaws.com"
+  @base_url Application.get_env(:junk, :s3_url)
 
   def init(_opts), do: []
 

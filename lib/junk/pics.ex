@@ -1,8 +1,11 @@
 defmodule Junk.Pics do
   @moduledoc "Provides access to the Pics collection data."
 
+  @base_url Application.get_env(:junk, :s3_url)
+
   require Logger
   use GenServer
+  import SweetXml
 
   # ===========================================================================
   # Public Interface
@@ -54,14 +57,13 @@ defmodule Junk.Pics do
   @impl true
   def handle_info(:populate, _state) do
     Logger.info("Populating Pics database")
-    # TODO fetch from S3
-    pics = [
-      %Junk.Pic{name: "wat.jpg"},
-      %Junk.Pic{name: "boop.gif"},
-      %Junk.Pic{prefix: "ad", name: "chicken.gif"},
-      %Junk.Pic{prefix: "pafyu", name: "achan-gun.gif"},
-      %Junk.Pic{prefix: "kp", name: "mock.gif"}
-    ]
+
+    {:ok, _status, _headers, req} = :hackney.get(@base_url, [], "", [])
+    {:ok, bucket_xml} = :hackney.body(req)
+
+    pics = bucket_xml
+           |> xpath(~x"//ListBucketResult/Contents"l, name: ~x"./Key/text()")
+           |> Enum.map(fn p -> Junk.Pic.create(p[:name]) end)
 
     prefixes =
       Enum.map(pics, fn p -> p.prefix end)
