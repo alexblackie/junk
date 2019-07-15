@@ -1,8 +1,6 @@
 defmodule Junk.Pics do
   @moduledoc "Provides access to the Pics collection data."
 
-  @base_url Application.get_env(:junk, :s3_url)
-
   require Logger
   use GenServer
   import SweetXml
@@ -11,8 +9,8 @@ defmodule Junk.Pics do
   # Public Interface
   # ===========================================================================
 
-  def start_link(_opts) do
-    GenServer.start_link(__MODULE__, [], name: __MODULE__)
+  def start_link(opts) do
+    GenServer.start_link(__MODULE__, opts, name: __MODULE__)
   end
 
   def all(), do: all(nil)
@@ -30,9 +28,9 @@ defmodule Junk.Pics do
   # ===========================================================================
 
   @impl true
-  def init([]) do
+  def init([xml_url: xml_url]) do
     send(self(), :populate)
-    {:ok, []}
+    {:ok, %{xml_url: xml_url}}
   end
 
   @impl true
@@ -55,10 +53,10 @@ defmodule Junk.Pics do
   end
 
   @impl true
-  def handle_info(:populate, _state) do
+  def handle_info(:populate, %{xml_url: xml_url} = _state) do
     Logger.info("Populating Pics database")
 
-    {:ok, _status, _headers, req} = :hackney.get(@base_url, [], "", [])
+    {:ok, _status, _headers, req} = :hackney.get(xml_url, [], "", [])
     {:ok, bucket_xml} = :hackney.body(req)
 
     pics = bucket_xml
