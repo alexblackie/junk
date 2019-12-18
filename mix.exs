@@ -5,7 +5,7 @@ defmodule Junk.MixProject do
     [
       app: :junk,
       version: "9.0.0",
-      elixir: "~> 1.8",
+      elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -22,11 +22,10 @@ defmodule Junk.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:plug_cowboy, "~> 2.0"},
+      {:plug_cowboy, "~> 2.1"},
       {:sweet_xml, "~> 0.6"},
-      {:mime, "~> 1.2"},
+      {:mime, "~> 1.3"},
       {:hackney, "~> 1.15"},
-      {:distillery, "~> 2.0"},
       {:bypass, "~> 1.0", only: :test}
     ]
   end

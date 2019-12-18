@@ -36,12 +36,10 @@ This uses a multi-stage Docker configuration to ensure the resulting production
 image is lean and contains just the compiled release artifacts.
 
 If you really want to build a release locally, you certainly still can! We use
-[Distillery][3] to generate OTP releases, so:
+the official Elixir 1.9 release process to generate OTP releases, so:
 
 ```
 $ mix release
 ```
 
 ... should do everything you need.
-
-[3]: https://github.com/bitwalker/distillery

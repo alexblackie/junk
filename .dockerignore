@@ -1,3 +1,6 @@
+Dockerfile
+.dockerignore
 /_build
 /deps
 /.git
+/rel
