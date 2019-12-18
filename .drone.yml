@@ -1,0 +1,12 @@
+---
+kind: pipeline
+type: kubernetes
+name: default
+
+steps:
+- name: tests
+  image: elixir:1.8
+  commands:
+  - mix local.hex --force && mix local.rebar --force
+  - mix deps.get
+  - mix test
