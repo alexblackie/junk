@@ -26,7 +26,8 @@ defmodule Junk.MixProject do
       {:sweet_xml, "~> 0.6"},
       {:mime, "~> 1.2"},
       {:hackney, "~> 1.15"},
-      {:distillery, "~> 2.0"}
+      {:distillery, "~> 2.0"},
+      {:bypass, "~> 1.0", only: :test}
     ]
   end
 end
