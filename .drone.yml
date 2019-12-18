@@ -31,7 +31,7 @@ steps:
     DIGITALOCEAN_ACCESS_TOKEN:
       from_secret: digitalocean_access_token
   commands:
-  - doctl kubernetes cluster kubeconfig show prd-dtor > ./do.yaml
+  - /app/doctl kubernetes cluster kubeconfig show prd-dtor > ./do.yaml
   when:
     branch:
     - deploy/production
