@@ -26,7 +26,7 @@ steps:
     - deploy/production
 
 - name: kubeconfig
-  image: digitalocean/doctl:1.36
+  image: digitalocean/doctl:1.36.0
   environment:
     DIGITALOCEAN_ACCESS_TOKEN:
       from_secret: digitalocean_access_token
