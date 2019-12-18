@@ -39,7 +39,7 @@ steps:
 - name: rollout
   image: bitnami/kubectl:1.15
   commands:
-  - kubectl --kubeconfig ./do.yaml set image svc/jkp "jkp=dcr.blackieops.com/jkp:${DRONE_COMMIT}"
+  - kubectl --kubeconfig ./do.yaml set image deploy/jkp "jkp=dcr.blackieops.com/jkp:${DRONE_COMMIT}"
   when:
     branch:
     - deploy/production
