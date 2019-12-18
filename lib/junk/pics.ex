@@ -28,7 +28,7 @@ defmodule Junk.Pics do
   # ===========================================================================
 
   @impl true
-  def init([xml_url: xml_url]) do
+  def init(xml_url: xml_url) do
     send(self(), :populate)
     {:ok, %{xml_url: xml_url}}
   end
@@ -59,9 +59,10 @@ defmodule Junk.Pics do
     {:ok, _status, _headers, req} = :hackney.get(xml_url, [], "", [])
     {:ok, bucket_xml} = :hackney.body(req)
 
-    pics = bucket_xml
-           |> xpath(~x"//ListBucketResult/Contents"l, name: ~x"./Key/text()")
-           |> Enum.map(fn p -> Junk.Pic.create(p[:name]) end)
+    pics =
+      bucket_xml
+      |> xpath(~x"//ListBucketResult/Contents"l, name: ~x"./Key/text()")
+      |> Enum.map(fn p -> Junk.Pic.create(p[:name]) end)
 
     prefixes =
       Enum.map(pics, fn p -> p.prefix end)

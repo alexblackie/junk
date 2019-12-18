@@ -11,9 +11,12 @@ defmodule Junk.Pic do
   def create(key) when is_list(key) do
     key |> to_string |> create()
   end
+
   def create(key) do
     case String.split(key, "/") do
-      [name] -> %__MODULE__{name: name}
+      [name] ->
+        %__MODULE__{name: name}
+
       [prefix, name] ->
         %__MODULE__{
           name: name,
