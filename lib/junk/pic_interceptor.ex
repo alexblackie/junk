@@ -6,23 +6,24 @@ defmodule Junk.PicInterceptor do
 
   import Plug.Conn
 
-  @base_url Application.get_env(:junk, :s3_url)
+  @default_upstream Application.get_env(:junk, :s3_url)
 
-  def init(_opts), do: []
+  def init(url) when is_binary(url), do: [upstream: url]
+  def init(_), do: [upstream: @default_upstream]
 
-  def call(%Plug.Conn{path_info: path} = conn, _opts)
+  def call(%Plug.Conn{path_info: path} = conn, opts)
       when is_list(path) and length(path) > 0 do
     slug = List.last(path)
 
     case Regex.match?(~r{\A(.*)\.gif|jpe?g|png$}, slug) do
       true ->
         {:ok, _status, _headers, req} =
-          :hackney.get(Enum.join([@base_url | path], "/"), [], "", [])
+          :hackney.get(Enum.join([opts[:upstream] | path], "/"), [], "", [])
 
         {:ok, image_data} = :hackney.body(req)
 
         conn
-        |> put_resp_header("Content-Type", MIME.from_path(slug))
+        |> put_resp_header("content-type", MIME.from_path(slug))
         |> send_resp(200, image_data)
         |> halt()
 
