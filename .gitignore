@@ -1,0 +1,20 @@
+target/
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Ignore local configuration
+src/main/resources/application.yml
+
+# Ignore language server / IDE garbage
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+.idea
+*.iws
+*.iml
+*.ipr
+.vscode/

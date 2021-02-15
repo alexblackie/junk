@@ -1,0 +1,6 @@
+---
+azure:
+  storage:
+    accountName: example
+    blob-endpoint: "https://${azure.storage.accountName}.blob.core.windows.net"
+    accountKey: "exampleasdfasdfasdf"
