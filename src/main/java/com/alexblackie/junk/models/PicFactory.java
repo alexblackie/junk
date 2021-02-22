@@ -7,17 +7,20 @@ import org.springframework.stereotype.Component;
 
 import com.alexblackie.junk.inputs.NameInputDatumContainer;
 import com.alexblackie.junk.inputs.SlugInputDatumContainer;
+import com.alexblackie.junk.inputs.PrefixInputDatumContainer;
 
 @Component("picFactory")
 public class PicFactory {
 
 	public Pic buildPic(
 			NameInputDatumContainer nameInputDatumContainer,
-			SlugInputDatumContainer slugInputDatumContainer) {
+			SlugInputDatumContainer slugInputDatumContainer,
+			PrefixInputDatumContainer prefixInputDatumContainer) {
 		Pic pic = new Pic();
 
 		pic.setName(nameInputDatumContainer);
 		pic.setSlug(slugInputDatumContainer);
+		pic.setPrefix(prefixInputDatumContainer);
 
 		return pic;
 	}
@@ -25,8 +28,9 @@ public class PicFactory {
 	public Pic buildPic(
 			NameInputDatumContainer nameInputDatumContainer,
 			SlugInputDatumContainer slugInputDatumContainer,
+			PrefixInputDatumContainer prefixInputDatumContainer,
 			Flux<ByteBuffer> image) {
-		Pic pic = buildPic(nameInputDatumContainer, slugInputDatumContainer);
+		Pic pic = buildPic(nameInputDatumContainer, slugInputDatumContainer, prefixInputDatumContainer);
 		pic.setImage(image);
 		return pic;
 	}

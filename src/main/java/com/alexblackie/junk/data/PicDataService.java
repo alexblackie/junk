@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import com.alexblackie.junk.converters.BlobItemPicConverter;
 import com.alexblackie.junk.inputs.NameInputDatumContainer;
 import com.alexblackie.junk.inputs.NameInputDatumContainerFactory;
+import com.alexblackie.junk.inputs.PrefixInputDatumContainer;
+import com.alexblackie.junk.inputs.PrefixInputDatumContainerFactory;
 import com.alexblackie.junk.inputs.SlugInputDatumContainer;
 import com.alexblackie.junk.inputs.SlugInputDatumContainerFactory;
 import com.alexblackie.junk.models.Pic;
@@ -32,6 +34,9 @@ public class PicDataService implements AbstractDataService<Pic> {
 
 	@Autowired
 	private SlugInputDatumContainerFactory slugInputDatumContainerFactory;
+
+	@Autowired
+	private PrefixInputDatumContainerFactory prefixInputDatumContainerFactory;
 
 	@Autowired
 	private PicFactory picFactory;
@@ -54,7 +59,12 @@ public class PicDataService implements AbstractDataService<Pic> {
 			this.slugInputDatumContainerFactory.buildInputDatumContainer(
 				blobClient.getBlobName());
 
-		return this.picFactory.buildPic(nameInputContainer, slugInputContainer, blobClient.download());
+		PrefixInputDatumContainer prefixInputContainer =
+			this.prefixInputDatumContainerFactory.buildInputDatumContainer(
+				blobClient.getBlobName());
+
+		return this.picFactory.buildPic(nameInputContainer, slugInputContainer,
+				prefixInputContainer, blobClient.download());
 	}
 
 	private BlobContainerAsyncClient getBlobContainerAsyncClient() {
