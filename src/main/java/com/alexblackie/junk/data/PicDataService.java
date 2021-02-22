@@ -37,18 +37,13 @@ public class PicDataService implements AbstractDataService<Pic> {
 	private PicFactory picFactory;
 
 	public Flux<Pic> listAll() {
-		BlobServiceAsyncClient blobServiceAsyncClient = blobServiceClientBuilder.buildAsyncClient();
-		BlobContainerAsyncClient blobContainerAsyncClient = blobServiceAsyncClient.getBlobContainerAsyncClient("pics");
-
-		return (Flux<Pic>) blobContainerAsyncClient
+		return (Flux<Pic>) getBlobContainerAsyncClient()
 			.listBlobs()
 			.map(blob -> this.blobItemPicConverter.blobItemToPic(blob));
 	}
 
 	public Pic getBySlug(SlugInputDatumContainer slugContainer) {
-		BlobServiceAsyncClient blobServiceAsyncClient = blobServiceClientBuilder.buildAsyncClient();
-		BlobContainerAsyncClient blobContainerAsyncClient = blobServiceAsyncClient.getBlobContainerAsyncClient("pics");
-		BlobAsyncClient blobClient = blobContainerAsyncClient.getBlobAsyncClient(
+		BlobAsyncClient blobClient = getBlobContainerAsyncClient().getBlobAsyncClient(
 				slugContainer.getSlug());
 
 		NameInputDatumContainer nameInputContainer =
@@ -60,5 +55,14 @@ public class PicDataService implements AbstractDataService<Pic> {
 				blobClient.getBlobName());
 
 		return this.picFactory.buildPic(nameInputContainer, slugInputContainer, blobClient.download());
+	}
+
+	private BlobContainerAsyncClient getBlobContainerAsyncClient() {
+		return getBlobContainerAsyncClient("pics");
+	}
+
+	private BlobContainerAsyncClient getBlobContainerAsyncClient(String containerName) {
+		BlobServiceAsyncClient blobServiceAsyncClient = blobServiceClientBuilder.buildAsyncClient();
+		return blobServiceAsyncClient.getBlobContainerAsyncClient(containerName);
 	}
 }
