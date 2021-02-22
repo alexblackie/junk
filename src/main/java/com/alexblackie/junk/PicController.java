@@ -47,6 +47,13 @@ public class PicController {
 		return "index";
 	}
 
+	// Avoid favicon requests raising errors.
+	@ResponseBody
+	@RequestMapping(path = "/favicon.ico", method = RequestMethod.GET)
+	public String favicon() {
+		return "";
+	}
+
 	@ResponseBody
 	@RequestMapping(path = "/{slug}", method = RequestMethod.GET)
 	public ResponseEntity<Flux<ByteBuffer>> show(@PathVariable("slug") String slug) {
