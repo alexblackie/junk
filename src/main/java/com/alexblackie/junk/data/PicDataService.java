@@ -19,7 +19,7 @@ import com.alexblackie.junk.models.Pic;
 import com.alexblackie.junk.models.PicFactory;
 
 @Component("picDataService")
-public class PicDataService {
+public class PicDataService implements AbstractDataService<Pic> {
 
 	@Autowired
 	private BlobServiceClientBuilder blobServiceClientBuilder;
@@ -36,7 +36,7 @@ public class PicDataService {
 	@Autowired
 	private PicFactory picFactory;
 
-	public Flux<Pic> listPics() {
+	public Flux<Pic> listAll() {
 		BlobServiceAsyncClient blobServiceAsyncClient = blobServiceClientBuilder.buildAsyncClient();
 		BlobContainerAsyncClient blobContainerAsyncClient = blobServiceAsyncClient.getBlobContainerAsyncClient("pics");
 
@@ -45,7 +45,7 @@ public class PicDataService {
 			.map(blob -> this.blobItemPicConverter.blobItemToPic(blob));
 	}
 
-	public Pic getPicBySlug(SlugInputDatumContainer slugContainer) {
+	public Pic getBySlug(SlugInputDatumContainer slugContainer) {
 		BlobServiceAsyncClient blobServiceAsyncClient = blobServiceClientBuilder.buildAsyncClient();
 		BlobContainerAsyncClient blobContainerAsyncClient = blobServiceAsyncClient.getBlobContainerAsyncClient("pics");
 		BlobAsyncClient blobClient = blobContainerAsyncClient.getBlobAsyncClient(

@@ -33,7 +33,7 @@ public class PicController {
 	@RequestMapping(path = "/", method = RequestMethod.GET)
 	@ResponseBody
 	public Flux<String> index() {
-		Flux<Pic> pics = picDataService.listPics();
+		Flux<Pic> pics = picDataService.listAll();
 		return pics.map((Pic p) -> p.getName() + "<br>");
 	}
 
@@ -46,7 +46,7 @@ public class PicController {
 		SlugInputDatumContainer slugInputDatumContainer =
 			this.slugInputDatumContainerFactory.buildInputDatumContainer(slug);
 
-		Pic pic = this.picDataService.getPicBySlug(slugInputDatumContainer);
+		Pic pic = this.picDataService.getBySlug(slugInputDatumContainer);
 
 		MediaType mediaType = MediaTypeFactory
 			.getMediaType(slugInputDatumContainer.getSlug())
