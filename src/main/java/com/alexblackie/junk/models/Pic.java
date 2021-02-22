@@ -6,8 +6,7 @@ import reactor.core.publisher.Flux;
 import com.alexblackie.junk.inputs.NameInputDatumContainer;
 import com.alexblackie.junk.inputs.SlugInputDatumContainer;
 
-public class Pic
-	implements AbstractPicDataEntity<NameInputDatumContainer, SlugInputDatumContainer> {
+public class Pic {
 
 	private String name;
 	private String slug;
