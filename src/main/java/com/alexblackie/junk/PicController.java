@@ -11,15 +11,18 @@ import org.springframework.http.MediaType;
 import org.springframework.http.MediaTypeFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alexblackie.junk.converters.PicPresenterConverter;
 import com.alexblackie.junk.inputs.SlugInputDatumContainer;
 import com.alexblackie.junk.inputs.SlugInputDatumContainerFactory;
 import com.alexblackie.junk.data.PicDataService;
 import com.alexblackie.junk.models.Pic;
+import com.alexblackie.junk.models.PicPresenter;
 
 @Controller
 public class PicController {
@@ -30,11 +33,18 @@ public class PicController {
 	@Autowired
 	private SlugInputDatumContainerFactory slugInputDatumContainerFactory;
 
+	@Autowired
+	private PicPresenterConverter picPresenterConverter;
+
 	@RequestMapping(path = "/", method = RequestMethod.GET)
-	@ResponseBody
-	public Flux<String> index() {
-		Flux<Pic> pics = picDataService.listAll();
-		return pics.map((Pic p) -> p.getName() + "<br>");
+	public String index(Model model) {
+		Flux<PicPresenter> presentablePics = picDataService
+			.listAll()
+			.map((Pic p) -> this.picPresenterConverter.picToPicPresenter(p));
+
+		model.addAttribute("pics", presentablePics);
+
+		return "index";
 	}
 
 	@ResponseBody
