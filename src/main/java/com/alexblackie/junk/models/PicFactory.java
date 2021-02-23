@@ -1,38 +1,38 @@
 package com.alexblackie.junk.models;
 
 import java.nio.ByteBuffer;
-import reactor.core.publisher.Flux;
-
 import org.springframework.stereotype.Component;
-
-import com.alexblackie.junk.inputs.NameInputDatumContainer;
-import com.alexblackie.junk.inputs.SlugInputDatumContainer;
-import com.alexblackie.junk.inputs.PrefixInputDatumContainer;
+import reactor.core.publisher.Flux;
 
 @Component("picFactory")
 public class PicFactory {
 
-	public Pic buildPic(
-			NameInputDatumContainer nameInputDatumContainer,
-			SlugInputDatumContainer slugInputDatumContainer,
-			PrefixInputDatumContainer prefixInputDatumContainer) {
-		Pic pic = new Pic();
-
-		pic.setName(nameInputDatumContainer);
-		pic.setSlug(slugInputDatumContainer);
-		pic.setPrefix(prefixInputDatumContainer);
-
-		return pic;
-	}
-
-	public Pic buildPic(
-			NameInputDatumContainer nameInputDatumContainer,
-			SlugInputDatumContainer slugInputDatumContainer,
-			PrefixInputDatumContainer prefixInputDatumContainer,
-			Flux<ByteBuffer> image) {
-		Pic pic = buildPic(nameInputDatumContainer, slugInputDatumContainer, prefixInputDatumContainer);
+	public Pic buildPic(String slug, Flux<ByteBuffer> image) {
+		Pic pic = buildPic(slug);
 		pic.setImage(image);
 		return pic;
 	}
 
+	public Pic buildPic(String slug) {
+		String[] segments = slug.split("/");
+
+		String name;
+		String prefix;
+
+		if (segments.length > 1) {
+			prefix = segments[0];
+			name = segments[1];
+		} else {
+			prefix = null;
+			name = segments[0];
+		}
+
+		Pic pic = new Pic();
+
+		pic.setName(name);
+		pic.setPrefix(prefix);
+		pic.setSlug(slug);
+
+		return pic;
+	}
 }

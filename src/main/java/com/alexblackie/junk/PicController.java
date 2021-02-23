@@ -17,14 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alexblackie.junk.models.PrefixPresenter;
-import com.alexblackie.junk.models.PrefixPresenterFactory;
 import com.alexblackie.junk.converters.PicPresenterConverter;
-import com.alexblackie.junk.inputs.SlugInputDatumContainer;
-import com.alexblackie.junk.inputs.SlugInputDatumContainerFactory;
-import com.alexblackie.junk.inputs.PrefixInputDatumContainer;
-import com.alexblackie.junk.inputs.PrefixInputDatumContainerFactory;
-import com.alexblackie.junk.data.AbstractDataService;
+import com.alexblackie.junk.data.PicDataService;
 import com.alexblackie.junk.models.Pic;
 import com.alexblackie.junk.models.PicPresenter;
 
@@ -32,16 +26,7 @@ import com.alexblackie.junk.models.PicPresenter;
 public class PicController {
 
 	@Autowired
-	private AbstractDataService<Pic> picDataService;
-
-	@Autowired
-	private SlugInputDatumContainerFactory slugInputDatumContainerFactory;
-
-	@Autowired
-	private PrefixInputDatumContainerFactory prefixInputDatumContainerFactory;
-
-	@Autowired
-	private PrefixPresenterFactory prefixPresenterFactory;
+	private PicDataService picDataService;
 
 	@Autowired
 	private PicPresenterConverter picPresenterConverter;
@@ -51,11 +36,9 @@ public class PicController {
 	public String index(Model model) {
 		Flux<PicPresenter> presentablePics = this.picDataService
 			.listAll()
-			.map((Pic p) -> this.picPresenterConverter.picToPicPresenter(p));
+			.map((Pic p) -> this.picPresenterConverter.build(p));
 
-		Flux<PrefixPresenter> prefixes = this.picDataService
-			.listAllPrefixes()
-			.map((String p) -> this.prefixPresenterFactory.buildPrefixPresenter(p));
+		Flux<String> prefixes = this.picDataService.listAllPrefixes();
 
 		model.addAttribute("pageTitle", "everything");
 		model.addAttribute("pics", presentablePics);
@@ -66,18 +49,13 @@ public class PicController {
 
 	@RequestMapping(path = "/{prefix:[a-z]+}", method = RequestMethod.GET)
 	public String indexPrefix(@PathVariable("prefix") String prefix, Model model) {
-		PrefixInputDatumContainer prefixInputDatumContainer =
-			this.prefixInputDatumContainerFactory.buildInputDatumContainer(prefix);
-
 		Flux<PicPresenter> presentablePics = picDataService
-			.listAll(prefixInputDatumContainer)
-			.map((Pic p) -> this.picPresenterConverter.picToPicPresenter(p));
+			.listAll(prefix)
+			.map((Pic p) -> this.picPresenterConverter.build(p));
 
-		Flux<PrefixPresenter> prefixes = this.picDataService
-			.listAllPrefixes()
-			.map((String p) -> this.prefixPresenterFactory.buildPrefixPresenter(p));
+		Flux<String> prefixes = this.picDataService.listAllPrefixes();
 
-		model.addAttribute("pageTitle", prefixInputDatumContainer.getPrefix());
+		model.addAttribute("pageTitle", prefix);
 		model.addAttribute("pics", presentablePics);
 		model.addAttribute("prefixes", prefixes);
 
@@ -98,13 +76,10 @@ public class PicController {
 		else
 			fullName = prefix + "/" + slug;
 
-		SlugInputDatumContainer slugInputDatumContainer =
-			this.slugInputDatumContainerFactory.buildInputDatumContainer(fullName);
-
-		Pic pic = this.picDataService.getBySlug(slugInputDatumContainer);
+		Pic pic = this.picDataService.getBySlug(fullName);
 
 		MediaType mediaType = MediaTypeFactory
-			.getMediaType(slugInputDatumContainer.getSlug())
+			.getMediaType(fullName)
 			.orElse(MediaType.APPLICATION_OCTET_STREAM);
 
 		HttpHeaders headers = new HttpHeaders();

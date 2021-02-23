@@ -3,10 +3,6 @@ package com.alexblackie.junk.models;
 import java.nio.ByteBuffer;
 import reactor.core.publisher.Flux;
 
-import com.alexblackie.junk.inputs.NameInputDatumContainer;
-import com.alexblackie.junk.inputs.SlugInputDatumContainer;
-import com.alexblackie.junk.inputs.PrefixInputDatumContainer;
-
 public class Pic {
 
 	private String name;
@@ -18,24 +14,24 @@ public class Pic {
 		return this.name;
 	}
 
-	public void setName(NameInputDatumContainer container) {
-		this.name = container.getName();
+	public void setName(String value) {
+		this.name = value;
 	}
 
 	public String getSlug() {
 		return this.slug;
 	}
 
-	public void setSlug(SlugInputDatumContainer container) {
-		this.slug = container.getSlug();
+	public void setSlug(String value) {
+		this.slug = value;
 	}
 
 	public String getPrefix() {
 		return this.prefix;
 	}
 
-	public void setPrefix(PrefixInputDatumContainer container) {
-		this.prefix = container.getPrefix();
+	public void setPrefix(String value) {
+		this.prefix = value;
 	}
 
 	public void setImage(Flux<ByteBuffer> image) {

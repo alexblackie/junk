@@ -12,33 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.cache.annotation.Cacheable;
 
-import com.alexblackie.junk.converters.BlobItemPicConverter;
-import com.alexblackie.junk.inputs.NameInputDatumContainer;
-import com.alexblackie.junk.inputs.NameInputDatumContainerFactory;
-import com.alexblackie.junk.inputs.PrefixInputDatumContainer;
-import com.alexblackie.junk.inputs.PrefixInputDatumContainerFactory;
-import com.alexblackie.junk.inputs.SlugInputDatumContainer;
-import com.alexblackie.junk.inputs.SlugInputDatumContainerFactory;
 import com.alexblackie.junk.models.Pic;
 import com.alexblackie.junk.models.PicFactory;
 
 @Component("picDataService")
-public class PicDataService implements AbstractDataService<Pic> {
+public class PicDataService {
 
 	@Autowired
 	private BlobServiceClientBuilder blobServiceClientBuilder;
-
-	@Autowired
-	private BlobItemPicConverter blobItemPicConverter;
-
-	@Autowired
-	private NameInputDatumContainerFactory nameInputDatumContainerFactory;
-
-	@Autowired
-	private SlugInputDatumContainerFactory slugInputDatumContainerFactory;
-
-	@Autowired
-	private PrefixInputDatumContainerFactory prefixInputDatumContainerFactory;
 
 	@Autowired
 	private PicFactory picFactory;
@@ -47,17 +28,16 @@ public class PicDataService implements AbstractDataService<Pic> {
 	public Flux<Pic> listAll() {
 		return (Flux<Pic>) getBlobContainerAsyncClient()
 			.listBlobs()
-			.map(blob -> this.blobItemPicConverter.blobItemToPic(blob));
+			.map(blob -> this.picFactory.buildPic(blob.getName()));
 	}
 
-	@Cacheable(value = "picDataListAllWithPrefix", key = "#prefixInputDatumContainer.getPrefix()")
-	public Flux<Pic> listAll(PrefixInputDatumContainer prefixInputDatumContainer) {
-		ListBlobsOptions options = new ListBlobsOptions()
-			.setPrefix(prefixInputDatumContainer.getPrefix());
+	@Cacheable(value = "picDataListAllWithPrefix", key = "#prefix")
+	public Flux<Pic> listAll(String prefix) {
+		ListBlobsOptions options = new ListBlobsOptions().setPrefix(prefix);
 
 		return (Flux<Pic>) getBlobContainerAsyncClient()
 			.listBlobs(options)
-			.map(blob -> this.blobItemPicConverter.blobItemToPic(blob));
+			.map(blob -> this.picFactory.buildPic(blob.getName()));
 	}
 
 	@Cacheable("picDataListAllPrefixes")
@@ -68,24 +48,10 @@ public class PicDataService implements AbstractDataService<Pic> {
 			.map(blob -> blob.getName().replace("/", ""));
 	}
 
-	public Pic getBySlug(SlugInputDatumContainer slugContainer) {
-		BlobAsyncClient blobClient = getBlobContainerAsyncClient().getBlobAsyncClient(
-				slugContainer.getSlug());
+	public Pic getBySlug(String slug) {
+		BlobAsyncClient blobClient = getBlobContainerAsyncClient().getBlobAsyncClient(slug);
 
-		NameInputDatumContainer nameInputContainer =
-			this.nameInputDatumContainerFactory.buildInputDatumContainer(
-				blobClient.getBlobName());
-
-		SlugInputDatumContainer slugInputContainer =
-			this.slugInputDatumContainerFactory.buildInputDatumContainer(
-				blobClient.getBlobName());
-
-		PrefixInputDatumContainer prefixInputContainer =
-			this.prefixInputDatumContainerFactory.buildInputDatumContainer(
-				blobClient.getBlobName());
-
-		return this.picFactory.buildPic(nameInputContainer, slugInputContainer,
-				prefixInputContainer, blobClient.download());
+		return this.picFactory.buildPic(slug, blobClient.download());
 	}
 
 	private BlobContainerAsyncClient getBlobContainerAsyncClient() {

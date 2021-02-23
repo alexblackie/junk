@@ -1,8 +1,6 @@
 # junk dot pics
 
-**Now featuring an ENTERPRISE READY codebase!**
-
-This is the software that runs the website [junk dot pics](https://junk.pics).
+This is the intentionally overkill software that powers the website [junk dot pics](https://junk.pics).
 
 ## Development
 
