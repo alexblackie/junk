@@ -1,0 +1,43 @@
+<!doctype html>
+<head>
+	<meta charset="utf-8">
+	<meta name="robots" content="noindex, noarchive, nofollow">
+	<title>junk dot pics</title>
+	<link rel="stylesheet" href="/css/site.css" type="text/css">
+</head>
+<body>
+	<div class="container">
+		<header class="site-header">
+			<h1><a href="/"><span>{{pageTitle}}</span> on <span>junk dot pics</span></a></h1>
+		</header>
+
+		<div class="site-main">
+			<div class="site-content">
+				<ul class="pics">
+					{{#pics}}
+					<li class="pic">
+						<a class="pic-prefix" href="{{prefixPath}}">{{prefix}}</a>
+						/
+						<a class="pic-name" href="/{{slug}}">{{name}}</a>
+					</li>
+					{{/pics}}
+				</ul>
+			</div>
+
+			<footer class="site-side">
+				<nav class="site-menu">
+					<h2>Collections</h2>
+					<ul>
+						{{#prefixes}}
+						<li><a href="/{{prefix}}">{{prefix}}</a></li>
+						{{/prefixes}}
+					</ul>
+				</nav>
+				<p class="credits">
+					This site is <a href="https://github.com/alexblackie/junk">enterprise-grade&trade; open source software</a>.<br>
+					Curated by <a href="https://www.alexblackie.com">Alex Blackie</a>.
+				</p>
+			</footer>
+		</div>
+	</div>
+</body>
