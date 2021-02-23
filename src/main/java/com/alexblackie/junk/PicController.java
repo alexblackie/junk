@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import reactor.core.publisher.Flux;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,7 +24,7 @@ import com.alexblackie.junk.inputs.SlugInputDatumContainer;
 import com.alexblackie.junk.inputs.SlugInputDatumContainerFactory;
 import com.alexblackie.junk.inputs.PrefixInputDatumContainer;
 import com.alexblackie.junk.inputs.PrefixInputDatumContainerFactory;
-import com.alexblackie.junk.data.PicDataService;
+import com.alexblackie.junk.data.AbstractDataService;
 import com.alexblackie.junk.models.Pic;
 import com.alexblackie.junk.models.PicPresenter;
 
@@ -31,7 +32,7 @@ import com.alexblackie.junk.models.PicPresenter;
 public class PicController {
 
 	@Autowired
-	private PicDataService picDataService;
+	private AbstractDataService<Pic> picDataService;
 
 	@Autowired
 	private SlugInputDatumContainerFactory slugInputDatumContainerFactory;
@@ -46,6 +47,7 @@ public class PicController {
 	private PicPresenterConverter picPresenterConverter;
 
 	@RequestMapping(path = "/", method = RequestMethod.GET)
+	@Cacheable("picControllerIndex")
 	public String index(Model model) {
 		Flux<PicPresenter> presentablePics = this.picDataService
 			.listAll()

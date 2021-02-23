@@ -10,6 +10,7 @@ import com.azure.storage.blob.models.ListBlobsOptions;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.cache.annotation.Cacheable;
 
 import com.alexblackie.junk.converters.BlobItemPicConverter;
 import com.alexblackie.junk.inputs.NameInputDatumContainer;
@@ -42,12 +43,14 @@ public class PicDataService implements AbstractDataService<Pic> {
 	@Autowired
 	private PicFactory picFactory;
 
+	@Cacheable("picDataListAll")
 	public Flux<Pic> listAll() {
 		return (Flux<Pic>) getBlobContainerAsyncClient()
 			.listBlobs()
 			.map(blob -> this.blobItemPicConverter.blobItemToPic(blob));
 	}
 
+	@Cacheable(value = "picDataListAllWithPrefix", key = "#prefixInputDatumContainer.getPrefix()")
 	public Flux<Pic> listAll(PrefixInputDatumContainer prefixInputDatumContainer) {
 		ListBlobsOptions options = new ListBlobsOptions()
 			.setPrefix(prefixInputDatumContainer.getPrefix());
@@ -57,6 +60,7 @@ public class PicDataService implements AbstractDataService<Pic> {
 			.map(blob -> this.blobItemPicConverter.blobItemToPic(blob));
 	}
 
+	@Cacheable("picDataListAllPrefixes")
 	public Flux<String> listAllPrefixes() {
 		return getBlobContainerAsyncClient()
 			.listBlobsByHierarchy("")
