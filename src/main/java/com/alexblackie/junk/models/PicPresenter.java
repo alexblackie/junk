@@ -4,7 +4,9 @@ public class PicPresenter {
 
 	public String name;
 	public String slug;
+
 	public String prefix;
+	public String prefixPath;
 
 	public void setName(String name) {
 		this.name = name;
@@ -17,8 +19,10 @@ public class PicPresenter {
 	public void setPrefix(String prefix) {
 		if (prefix == null) {
 			this.prefix = "::";
+			this.prefixPath = "/";
 		} else {
 			this.prefix = prefix;
+			this.prefixPath = "/" + prefix;
 		}
 	}
 

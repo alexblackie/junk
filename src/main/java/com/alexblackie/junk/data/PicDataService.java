@@ -6,6 +6,7 @@ import com.azure.storage.blob.BlobAsyncClient;
 import com.azure.storage.blob.BlobContainerAsyncClient;
 import com.azure.storage.blob.BlobServiceAsyncClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
+import com.azure.storage.blob.models.ListBlobsOptions;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -45,6 +46,22 @@ public class PicDataService implements AbstractDataService<Pic> {
 		return (Flux<Pic>) getBlobContainerAsyncClient()
 			.listBlobs()
 			.map(blob -> this.blobItemPicConverter.blobItemToPic(blob));
+	}
+
+	public Flux<Pic> listAll(PrefixInputDatumContainer prefixInputDatumContainer) {
+		ListBlobsOptions options = new ListBlobsOptions()
+			.setPrefix(prefixInputDatumContainer.getPrefix());
+
+		return (Flux<Pic>) getBlobContainerAsyncClient()
+			.listBlobs(options)
+			.map(blob -> this.blobItemPicConverter.blobItemToPic(blob));
+	}
+
+	public Flux<String> listAllPrefixes() {
+		return getBlobContainerAsyncClient()
+			.listBlobsByHierarchy("")
+			.filter(blob -> blob.isPrefix() != null) // what the fuck azure
+			.map(blob -> blob.getName().replace("/", ""));
 	}
 
 	public Pic getBySlug(SlugInputDatumContainer slugContainer) {
