@@ -16,5 +16,8 @@ jobs:
         java-version: "17"
         cache: maven
 
+    - name: Set up properties file
+      run: cp src/main/resources/application.yml.ci src/main/resources/application.yml
+
     - name: Test with maven
       run: mvn test
