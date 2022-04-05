@@ -3,6 +3,16 @@ spring:
   mustache:
     suffix: .html
 
+junk:
+  picDataService: azureblob
+  # Or, for local storage:
+  #picDataService: local
+  #picDir: pics
+
+# These config properties must always be present for the app to boot. Their
+# values are ignored unless you are using 'azureblob' for the 'picDataService'.
+#
+# TODO: surely there is a way to make the Azure SDK quit its whining?
 azure:
   storage:
     accountName: example

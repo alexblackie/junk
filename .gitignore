@@ -2,6 +2,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+# Ignore local pics
+/pics
+
 # Ignore local configuration
 src/main/resources/application.yml
 
