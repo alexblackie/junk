@@ -4,7 +4,6 @@ import java.nio.ByteBuffer;
 import reactor.core.publisher.Flux;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,7 +31,6 @@ public class PicController {
 	private PicPresenterConverter picPresenterConverter;
 
 	@RequestMapping(path = "/", method = RequestMethod.GET)
-	@Cacheable("picControllerIndex")
 	public String index(Model model) {
 		Flux<PicPresenter> presentablePics = this.picDataService
 			.listAll()
