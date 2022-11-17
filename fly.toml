@@ -8,8 +8,8 @@ processes = []
 [env]
   "spring.mustache.suffix" = ".html"
   "junk.picDataService" = "azureblob"
-  "azure.storage.accountName" = "junkpicsproduction"
-  "azure.storage.blob-endpoint" = "https://junkpicsproduction.blob.core.windows.net"
+  "spring.cloud.azure.storage.blob.account-name" = "junkpicsproduction"
+  "spring.cloud.azure.storage.blob.endpoint" = "https://junkpicsproduction.blob.core.windows.net"
 
 [experimental]
   allowed_public_ports = []
