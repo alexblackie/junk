@@ -2,17 +2,14 @@
 spring:
   mustache:
     suffix: .html
+  cloud:
+    azure:
+      storage:
+        blob:
+          account-name: exampleaccountname
+          account-key: "xxx"
+          endpoint: "https://${spring.cloud.azure.storage.blob.account-name}.blob.core.windows.net"
 
 junk:
   picDataService: local
   picDir: pics
-
-# These config properties must always be present for the app to boot. Their
-# values are ignored unless you are using 'azureblob' for the 'picDataService'.
-#
-# TODO: surely there is a way to make the Azure SDK quit its whining?
-azure:
-  storage:
-    accountName: example
-    blob-endpoint: "https://${azure.storage.accountName}.blob.core.windows.net"
-    accountKey: "exampleasdfasdfasdf"

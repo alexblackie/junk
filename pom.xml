@@ -15,7 +15,6 @@
 	<description>don't look</description>
 	<properties>
 		<java.version>11</java.version>
-		<azure.version>3.14.0</azure.version>
 		<spring-framework.version>5.3.23</spring-framework.version>
 	</properties>
 	<dependencies>
@@ -29,7 +28,8 @@
 		</dependency>
 		<dependency>
 			<groupId>com.azure.spring</groupId>
-			<artifactId>azure-spring-boot-starter-storage</artifactId>
+			<artifactId>spring-cloud-azure-starter-storage-blob</artifactId>
+			<version>4.4.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -54,17 +54,6 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.azure.spring</groupId>
-				<artifactId>azure-spring-boot-bom</artifactId>
-				<version>${azure.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<build>
 		<plugins>
@@ -74,5 +63,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
