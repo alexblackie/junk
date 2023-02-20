@@ -60,14 +60,6 @@ a {
   order: 999;
   width: var(--width-sidebar);
 }
-  .site-side .credits {
-    color: var(--color-text-light);
-    font-size: 0.9rem;
-    line-height: 1.5em;
-  }
-    .site-side .credits a {
-      color: var(--color-text-light);
-    }
 
 .site-menu {
   box-sizing: border-box;
@@ -154,11 +146,6 @@ a {
 
   .site-content {
     order: 10;
-  }
-
-  .site-side .credits {
-    text-align: center;
-    font-size: 0.75em;
   }
 
   .pics {
