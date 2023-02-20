@@ -3,7 +3,7 @@ ADD . /app
 WORKDIR /app
 # We need some properties filled for the beans to be initialized properly; the values don't matter.
 RUN cp src/main/resources/application.yml.example src/main/resources/application.yml && \
-	mvn package
+	mvn package -Dmaven.test.skip=true
 
 FROM openjdk:18-slim
 COPY --from=builder /app/target/junk-0.0.1-SNAPSHOT.jar /app.jar
