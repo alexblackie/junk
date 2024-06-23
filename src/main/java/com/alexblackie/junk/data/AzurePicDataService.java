@@ -28,7 +28,7 @@ public class AzurePicDataService implements PicDataService {
 
 	@Cacheable("picDataListAll")
 	public Flux<Pic> listAll() {
-		return (Flux<Pic>) getBlobContainerAsyncClient()
+		return getBlobContainerAsyncClient()
 			.listBlobs()
 			.map(blob -> this.picFactory.buildPic(blob.getName()));
 	}
@@ -37,7 +37,7 @@ public class AzurePicDataService implements PicDataService {
 	public Flux<Pic> listAll(String prefix) {
 		ListBlobsOptions options = new ListBlobsOptions().setPrefix(prefix);
 
-		return (Flux<Pic>) getBlobContainerAsyncClient()
+		return getBlobContainerAsyncClient()
 			.listBlobs(options)
 			.map(blob -> this.picFactory.buildPic(blob.getName()));
 	}
@@ -46,14 +46,14 @@ public class AzurePicDataService implements PicDataService {
 	public Flux<String> listAllPrefixes() {
 		return getBlobContainerAsyncClient()
 			.listBlobsByHierarchy("")
-			.filter(blob -> blob.isPrefix() != null) // what the fuck azure
+			.filter(blob -> blob.isPrefix())
 			.map(blob -> blob.getName().replace("/", ""));
 	}
 
 	public Pic getBySlug(String slug) {
 		BlobAsyncClient blobClient = getBlobContainerAsyncClient().getBlobAsyncClient(slug);
 
-		return this.picFactory.buildPic(slug, blobClient.download());
+		return this.picFactory.buildPic(slug, blobClient.downloadStream());
 	}
 
 	private BlobContainerAsyncClient getBlobContainerAsyncClient() {
